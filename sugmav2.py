@@ -23,9 +23,17 @@ for i in range(0, len(Agents)):
     GlobalPickRates[i] = (GlobalPickRates[i].split('%', 1)[0])
     GlobalPickRates[i] = GlobalPickRates[i][22:]
 
-
+List_AllData = []
 for i in range(0, 19):
-    print(Agents[i] + "'s pickrate is " + GlobalPickRates[i])
+    List_AllData.append({'Agent':Agents[i], 'Pickrate':GlobalPickRates[i]})
+#print(List_AllData)
+zz = soup.find_all("span", class_="map-pseudo-icon", limit=7)
+print(zz)
+    
+
+
+#for i in range(0, 19):
+#    print(Agents[i] + "'s pickrate is " + GlobalPickRates[i])
 
 
 
