@@ -1,15 +1,33 @@
+from glob import glob
 from bs4 import BeautifulSoup
 import re
-Agents = []
-with open("testpage.html") as testpage:
+
+with open("newtest.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
+    
+Agents = []
+GetAgents = soup.select("div img")
+for i in range(1,20):
+    Agents.append(GetAgents[i])
+for i in range(0, len(Agents)):
+    Agents[i] = str(Agents[i])
+    Agents[i] = (Agents[i].split('.', 1)[0])
+    Agents[i] = Agents[i][31:]
+    
+GlobalPickRates=[]
+GetGPRs = soup.select('table[class*="wf-table mod-pr-global"] td span')
+for i in range(0,19):
+    GlobalPickRates.append(GetGPRs[i])
+for i in range(0, len(Agents)):
+    GlobalPickRates[i] = str(GlobalPickRates[i])
+    GlobalPickRates[i] = (GlobalPickRates[i].split('%', 1)[0])
+    GlobalPickRates[i] = GlobalPickRates[i][22:]
 
-y = soup.select("div img", class_="wf-card mod-dark mod-table mod-scroll")
 
-for z in range(1,20):
-    Agents.append(y[z])
+for i in range(0, 19):
+    print(Agents[i] + "'s pickrate is " + GlobalPickRates[i])
 
-Agents[0] = str(Agents[0])
-print(Agents[0])
-print(type(Agents[0]))
 
+
+#print(len(GlobalWRs))
+#print(len(MapPR))
