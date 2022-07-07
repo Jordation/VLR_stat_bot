@@ -1,9 +1,6 @@
-from asyncore import loop
-from curses import getwin
 from glob import glob
 from bs4 import BeautifulSoup
 import re
-import asyncio
 
 with open("newtest.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
@@ -74,6 +71,13 @@ for i in range(19):
     agentspicked.append(ALLpickdata[i])
     agentspicked[i] = str(agentspicked[i])
     
-team_map_picked = []
-for i in range(19):
-    pass
+print(map_agent_pickrate)
+
+# print(agentspicked)
+# team_map_picked = []
+# for i in range(19):
+#     if agentspicked[i] == '<td class="mod-picked">\n</td>':
+#         agentspicked[i] = 1
+#     else:
+#         agentspicked[i] = 0
+# print(agentspicked)
