@@ -67,8 +67,13 @@ def GetTeams():
          teams_order.append(str(Teams[y]))
          teams_order[y] = re.findall("([\^A-Z]\w+)", teams_order[y])
 GetTeams()
-team_picks = []
-def FindComps(tag):
-    position = soup.find('tr', attrs={"class": "pr-matrix-row"})
-    
 
+agentspicked = []
+ALLpickdata = soup.select('td[class*="mod-picked"]')
+for i in range(19):
+    agentspicked.append(ALLpickdata[i])
+    agentspicked[i] = str(agentspicked[i])
+    
+team_map_picked = []
+for i in range(19):
+    pass
