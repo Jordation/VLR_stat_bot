@@ -6,21 +6,27 @@ from bs4 import BeautifulSoup
 import re
 import asyncio
 
-with open("newtest.html") as testpage:
+with open("testing.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
     
-allcomps = soup.find('div', class_="pr-matrix-map")
-print(len(list(allcomps.descendants)))
-newshit = list(allcomps.descendants)
-print(newshit)
-on the 139'th comma, build a regex thing to target this start, pop all list items until this, once td null tag is reached, begin popping again and finding correct portions, eventually cna do the /19 trick
+# allcomps = soup.find_all('table', class_="wf-table")
+# newshit = allcomps[0].find_all('td')
+# newershit = newshit.select(".pr-matrix-row ~ td")
+# print(newershit)
+aaaaaa = soup.select("[class~=pr-matrix-row]")
+print(aaaaaa[0])
 
 
 
 
+#2-19-4-19-2-19-2etc
+
+# print(len(newshit))
 
 
+# If none of the other matches work for you, define a function that takes an element as its only argument. The function should return True if the argument matches, and False otherwise.
 
+# Here’s a function that returns True if a tag defines the “class” attribute but doesn’t define the “id” attribute:
 
 
 # for i in range(len(agentspicked)):
