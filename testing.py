@@ -9,10 +9,6 @@ from bs4.diagnose import diagnose
 import re
 import asyncio
 
-from certifi import where
-
-from sugmav2 import Agents
-
 with open("newtest.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
   
@@ -22,6 +18,7 @@ def remove_newlines(oldlist):
     for i in range(len(oldlist)):
         if oldlist[i] != '\n':
             newlist_cleaned.append(oldlist[i])
+    newlist_cleaned.pop(1)
     return newlist_cleaned
         
 def Split_Teams_From_Map(SentData):
@@ -103,6 +100,15 @@ def ItAintPretty():
         Agents[i] = Agents[i][31:]
     return Agents
 
+def Get_Individual_Comps(Teams_Matches):
+    TempList = []
+    for y in range((len(Teams_Matches)-(len(Teams_Matches)-19)), (len(Teams_Matches))):
+        newlist = remove_newlines(list(Teams_Matches[y].contents))
+        TempList.append(newlist)
+    return Teams_Matches
+        
+
+
 def Assemble_Comps(Agents_Ordered, onesandzeros, Teams):
     export_picks = []
     temp_list = []
@@ -125,13 +131,19 @@ for i in range(len(Actv_Map.contents)):
 
 JustPicks = Split_Teams_From_Map(MapName_All_Picks)
 
+for i in range(len(JustPicks)):
+    JustPicks[i].contents = begone_newlineSHITFUCKOFFFFFF(JustPicks[i].contents)
+    
+#Individual_Comps = []
+#for i in range(12):
+#        Individual_Comps.append(Get_Individual_Comps(list(JustPicks[i])))
+
 Matches_Played = Get_match_list_map(Actv_Map)
 
 Teams_Playing = Get_team_list_map(Actv_Map)
 
 #cleans picks
-for i in range(len(JustPicks)):
-    JustPicks[i].contents = begone_newlineSHITFUCKOFFFFFF(JustPicks[i].contents)
+
 #redundant
 
 onesandzerospicks = Team_played_OVERALL(JustPicks)
@@ -140,7 +152,9 @@ AgentOrder = ItAintPretty()
 
 Map_In_Funcs = get_map_map_map(Actv_Map)
 
-Assembled_Awesomes = Assemble_Comps(AgentOrder, onesandzerospicks, Teams_Playing)
+Team_Overall_Picked = Assemble_Comps(AgentOrder, onesandzerospicks, Teams_Playing)
+
+
 
 print("fuckin breakpoint bitch")
 
