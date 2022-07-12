@@ -1,6 +1,15 @@
 from glob import glob
+from hashlib import new
+from operator import index
+from reprlib import recursive_repr
+from turtle import pos
+from xml.sax.handler import all_properties
 from bs4 import BeautifulSoup
+from bs4.diagnose import diagnose
 import re
+import asyncio
+
+from pkg_resources import working_set
 
 with open("newtest.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
@@ -37,6 +46,7 @@ for i in range(7):
     MapOrder_Comps.append(GetMapOrder2[i])
     MapOrder_Comps[i] = str(MapOrder_Comps[i])
     MapOrder_Comps[i] = re.findall("([\^A-Z]\w+)", MapOrder_Comps[i])
+
 raw_pickrates = []
 PickRateByMap = soup.select('tr div span')
 for i in range(len(PickRateByMap)):
@@ -44,40 +54,67 @@ for i in range(len(PickRateByMap)):
     raw_pickrates[i] = str(raw_pickrates[i])
     raw_pickrates[i] = re.findall("([0-9]+%)", raw_pickrates[i])
 
-map_agent_pickrate= []
+map_agent_pickrate_STORED= []
 for i in range(8):
     for y in range((i*19),(i+1)*19):
             if i < 1:
-                map_agent_pickrate.append({'Agent':Agents[y],'Pickrate':raw_pickrates[y]})
+                map_agent_pickrate_STORED.append({'Agent':Agents[y],'Pickrate':raw_pickrates[y]})
             else:
-                map_agent_pickrate.append({'Map':MapOrder_PickRates[i-1], 'Agent':Agents[(y%19)],'Pickrate':raw_pickrates[y]})
+                map_agent_pickrate_STORED.append({'Map':MapOrder_PickRates[i-1], 'Agent':Agents[(y%19)],'Pickrate':raw_pickrates[y]})
 
-teams_order = []
+teams_ordered = []
 def GetTeams():
-    global teams_order
+    global teams_ordered
     Teams = soup.select('span[class*="text-of"]')
     for i in range(1, (len(Teams))):
         if Teams[0] == Teams[(i)]:
             TotalTeams = i
+            print("Total Teams Found: ", TotalTeams)
             break
     for y in range(TotalTeams):
-         teams_order.append(str(Teams[y]))
-         teams_order[y] = re.findall("([\^A-Z]\w+)", teams_order[y])
+         teams_ordered.append(str(Teams[y]))
+         teams_ordered[y] = re.findall("([\^A-Z]\w+)", teams_ordered[y])
+            
 GetTeams()
+print(teams_ordered)
+Tables_Agents_Data = soup.find_all('table', class_='wf-table')
+def remove_ugly_COMPS(active_ugly):
+    for i in range(2):
+        killkillkill = active_ugly.i.extract()
+        killkillkill = active_ugly.a.extract()
+    return active_ugly
 
-agentspicked = []
-ALLpickdata = soup.select('td[class*="mod-picked"]')
-for i in range(19):
-    agentspicked.append(ALLpickdata[i])
-    agentspicked[i] = str(agentspicked[i])
+def Get_Agents_Picked_Pos(MapNum):
+    Sent_data = []
+    global Tables_Agents_Data
+    useindex = MapNum + 1
+
+    Active_Soup = Tables_Agents_Data[useindex].find('tr', class_='pr-matrix-row')
+    Cleaned_Soup = remove_ugly_COMPS(Active_Soup)
+    for i in range(len(Cleaned_Soup)):
+        if Cleaned_Soup.contents[i] != '\n':
+            Sent_data.append(Cleaned_Soup.contents[i])
+    for i in range(2):
+        Sent_data.pop(0)
+        Sent_data.pop(-1)
+    for i in range(19):
+        Sent_data[i] = str(Sent_data[i])
+        if Sent_data[i] == '<td class="">\n</td>':
+            Sent_data[i] = 0
+        else:
+            Sent_data[i] = 1
+    return Sent_data
+
+def Comp_finder(WorkingSet):
+    global Agents
+    for i in range(19):
+        if WorkingSet[i] == 1:
+            WorkingSet[i] = Agents[i]
+        else:
+            WorkingSet[i] = 'Not Picked'
+    return WorkingSet
+            
     
-print(map_agent_pickrate)
-
-# print(agentspicked)
-# team_map_picked = []
-# for i in range(19):
-#     if agentspicked[i] == '<td class="mod-picked">\n</td>':
-#         agentspicked[i] = 1
-#     else:
-#         agentspicked[i] = 0
-# print(agentspicked)
+#Fracture_Picks = Get_Agents_Picked_Pos(0)
+#Comp_finder(Fracture_Picks)
+#print(Fracture_Picks)
