@@ -19,7 +19,6 @@ def remove_newlines(oldlist):
     for i in range(len(oldlist)):
         if oldlist[i] != '\n':
             newlist_cleaned.append(oldlist[i])
-    newlist_cleaned.pop(1)
     return newlist_cleaned
         
 def Split_Teams_From_Map(SentData):
@@ -90,16 +89,16 @@ def Team_played_OVERALL(RawPicks):
     return All_Picks_NO_AGENTS
 
 def ItAintPretty():
-    Agents = []
+    AgentListInFunc = []
     global soup
     GetAgents = soup.select("div img")
     for i in range(1,20):
-        Agents.append(GetAgents[i])
-    for i in range(0, len(Agents)):
-        Agents[i] = str(Agents[i])
-        Agents[i] = (Agents[i].split('.', 1)[0])
-        Agents[i] = Agents[i][31:]
-    return Agents
+        AgentListInFunc.append(GetAgents[i])
+    for i in range(0, len(AgentListInFunc)):
+        AgentListInFunc[i] = str(AgentListInFunc[i])
+        AgentListInFunc[i] = (AgentListInFunc[i].split('.', 1)[0])
+        AgentListInFunc[i] = AgentListInFunc[i][31:]
+    return AgentListInFunc
 
 def Get_Individual_Comps(Teams_Matches):
     TempList = []
@@ -191,16 +190,16 @@ Teams_Playing = Get_team_list_map(Actv_Map)
 #redundant
 
 
+Agents = list(ItAintPretty())
 
 onesandzerospicks = Team_played_OVERALL(JustPicks)
 
 Cleaned_Match_Data = Team_Played_MATCH(JustPicks)
 
-AgentOrder = ItAintPretty()
 
 Map_In_Funcs = get_map_map_map(Actv_Map)
 
-Team_Overall_Picked = Assemble_Comps(AgentOrder, onesandzerospicks, Teams_Playing)
+Team_Overall_Picked = Assemble_Comps(Agents, onesandzerospicks, Teams_Playing)
 #xD
 
 
