@@ -177,7 +177,7 @@ JustPicks = Split_Teams_From_Map(MapName_All_Picks)
 
 for i in range(len(JustPicks)):
     JustPicks[i].contents = begone_newlineSHITFUCKOFFFFFF(JustPicks[i].contents)
-    
+
 #Individual_Comps = []
 #for i in range(12):
 #        Individual_Comps.append(Get_Individual_Comps(list(JustPicks[i])))
@@ -201,7 +201,7 @@ AgentOrder = ItAintPretty()
 Map_In_Funcs = get_map_map_map(Actv_Map)
 
 Team_Overall_Picked = Assemble_Comps(AgentOrder, onesandzerospicks, Teams_Playing)
-
+#xD
 
 
 print("fuckin breakpoint bitch")
