@@ -3,6 +3,7 @@ from hashlib import new
 from operator import index
 from reprlib import recursive_repr
 from this import d
+from tokenize import group
 from turtle import pos
 from bs4 import BeautifulSoup
 from bs4.diagnose import diagnose
@@ -114,6 +115,49 @@ def Assemble_Comps(Agents_Ordered, onesandzeros, Teams):
         export_picks.append({'Team': Teams[i],'Map': 'whatevs', 'Agents Picked': list(temp_list)})
     return export_picks
 
+def OneZeroFromMatches(AgentsPickedData):
+    oneandzerolist = []
+    grouped_matches = []
+    retlist = []
+    for i in range(12):
+        grouped_matches.clear()
+        for x in range(len(AgentsPickedData[i])):
+            oneandzerolist.clear()
+            oneandzerolist.append(AgentsPickedData[i][x][0])
+            for y in range(1, len(AgentsPickedData[i][x])):
+                if str(AgentsPickedData[i][x][y]) == '<td class="">\n</td>':
+                    oneandzerolist.append(0)
+                else:
+                    oneandzerolist.append(1)
+            grouped_matches.append(list(oneandzerolist))
+        retlist.append(list(grouped_matches))
+    return retlist
+
+def OneZero_To_agents_M(oneszeros):
+    PickedAgents = []
+    global Agents
+    for i in range(1,20):
+        if oneszeros[i] == 1:
+            PickedAgents.append(Agents[i-1])
+    return PickedAgents
+            
+        
+def Team_Played_MATCH(PickData):
+    retlist = []
+    templist = []
+    for i in range(12):
+        templist.clear()
+        for y in range(19, len(PickData[i].contents)):
+            p = y-19
+            templist.append(remove_newlines(list(PickData[i].contents[y].contents)))
+            templist[p].pop(1)
+        retlist.append(list(templist))
+    retlist = OneZeroFromMatches(retlist)
+    for i in range(len(retlist)):
+        for y in range(len(retlist[i])):
+            retlist[i][y] = list(OneZero_To_agents_M(retlist[i][y]))
+    return retlist
+
 #in use becomes the table nested within pr-matrix-map, - 1 of these per map
 #need to automate find.next or whatever
 
@@ -134,7 +178,11 @@ for i in range(len(JustPicks)):
     JustPicks[i].contents = begone_newlineSHITFUCKOFFFFFF(JustPicks[i].contents)
 #redundant
 
+
+
 onesandzerospicks = Team_played_OVERALL(JustPicks)
+
+Cleaned_Match_Data = Team_Played_MATCH(JustPicks)
 
 AgentOrder = ItAintPretty()
 
