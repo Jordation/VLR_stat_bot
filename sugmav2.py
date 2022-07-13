@@ -115,6 +115,6 @@ def Comp_finder(WorkingSet):
     return WorkingSet
             
     
-#Fracture_Picks = Get_Agents_Picked_Pos(0)
-#Comp_finder(Fracture_Picks)
-#print(Fracture_Picks)
+Fracture_Picks = Get_Agents_Picked_Pos(0)
+Comp_finder(Fracture_Picks)
+print(Fracture_Picks)
