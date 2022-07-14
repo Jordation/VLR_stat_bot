@@ -13,7 +13,7 @@ import asyncio
 with open("newtest.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
   
- 
+
 def remove_newlines(oldlist):
     newlist_cleaned = []
     for i in range(len(oldlist)):
@@ -42,12 +42,11 @@ def get_map_map_map(Active_map_object_lol):
     textdata = str(Active_map_object_lol.text)
     reobject = re.search(pattern, textdata)
     Map_In = reobject.group(1)
-    #UR ALMOST THERE JUST FINISH IT WHEN UR HONME
     return Map_In
     
     
 
-def Get_match_list_map(Active_Map_Object):
+def Get_Opononent_List(Active_Map_Object):
     pattern = re.compile("(vs. \w+ \w+ \w+)|(vs. \w+ \w+)|(vs. \w+)")
     Match_list = []
     ugly_matchlist = str(Active_Map_Object.text)
@@ -55,7 +54,7 @@ def Get_match_list_map(Active_Map_Object):
         Match_list.append(str(x.group()))
     return Match_list
 
-def Get_team_list_map(Active_map_Object):
+def Get_team_list(Active_map_Object):
     TeamsPlaying = []
     JustNames = Active_map_Object.find_all('span', class_='text-of')
     for i in range(len(JustNames)):
@@ -112,12 +111,13 @@ def Get_Individual_Comps(Teams_Matches):
 def Assemble_Comps(Agents_Ordered, onesandzeros, Teams):
     export_picks = []
     temp_list = []
+    MatchesPlayed = []
     for i in range(12):
         temp_list.clear()
         for y in range(19):
             if onesandzeros[i][y] == 1:
                 temp_list.append(str(Agents_Ordered[y]))
-        export_picks.append({'Team': Teams[i],'Map': 'whatevs', 'Agents Picked': list(temp_list)})
+        export_picks.append({'Team': Teams[i], 'Agents Picked': list(temp_list), 'Matches': MatchesPlayed})
     return export_picks
 
 def OneZeroFromMatches(AgentsPickedData):
@@ -138,14 +138,26 @@ def OneZeroFromMatches(AgentsPickedData):
         retlist.append(list(grouped_matches))
     return retlist
 
+def ImSoSorry(forgiveme):
+    forgiveme = str(forgiveme)
+    p = forgiveme.split('>')
+    p.pop(1)
+    forgiveme = str(p[0])
+    return forgiveme
+
 def OneZero_To_agents_M(oneszeros):
     PickedAgents = []
-    global Agents
-    for i in range(1,20):
+    global OrderedAgents
+    oneszeros[0] = ImSoSorry(oneszeros)
+    for i in range(20):
         if oneszeros[i] == 1:
-            PickedAgents.append(Agents[i-1])
+            PickedAgents.append(OrderedAgents[i-1])
+        elif str(oneszeros[i]) == '[<td class="mod-win"':
+            PickedAgents.append('W')
+        elif str(oneszeros[i]) == '[<td class="mod-loss"':
+            PickedAgents.append('L')
     return PickedAgents
-            
+
         
 def Team_Played_MATCH(PickData):
     retlist = []
@@ -163,51 +175,99 @@ def Team_Played_MATCH(PickData):
             retlist[i][y] = list(OneZero_To_agents_M(retlist[i][y]))
     return retlist
 
-#in use becomes the table nested within pr-matrix-map, - 1 of these per map
-#need to automate find.next or whatever
+def CleanMatchList(MatchList):
+    for i in range(len(MatchList)):
+        MatchList[i] = MatchList[i][4:]
+    return MatchList
 
-MapName_All_Picks = []
+def Begin_Assemble(OpponentList, GroupedMatches, TeamsList, damap, TeamDicts):
+    def Make_match_dicts(Match, Team, Opponent):
+        matchDict = {}
+        matchDict["Team"]=str(Team)
+        matchDict["Opponent"]=str(Opponent)
+        matchDict["Result"]=str(Match[0])
+        matchDict["Comp"]=list(Match[1:6])
+        return matchDict
+    
+    LTeams = list(TeamDicts)
+    Matches_Counter = 0
+    ThisMap={'Map': damap, 'Teams': LTeams}
+    OpponentList = CleanMatchList(OpponentList)
+    
+    for i in range(len(LTeams)):
+        aha = []
+        aha.clear()
+        for y in range(len(GroupedMatches[i])):
+            aha.append(Make_match_dicts(GroupedMatches[i][y], TeamsList[i], OpponentList[Matches_Counter]))
+            Matches_Counter += 1
+            ThisMap['Teams'][i]['Matches'] = aha
+    return ThisMap
+
+def GetMapsReady(wftable):
+    retlist = []
+    for i in range(len(wftable.contents)):
+        if wftable.contents[i] != '\n':
+            retlist.append(wftable.contents[i])
+    return retlist
+
+
+#events_maps = [0,0,0,0,0,0,0]
+#Actv_Map = soup.find_all("div", class_="pr-matrix-map")
+#events_maps[0]=Actv_Map[0].contents[1].contents[1]
+#events_maps[1]=Actv_Map[1].contents[1].contents[1]
+#events_maps[2]=Actv_Map[2].contents[1].contents[1]
+#events_maps[3]=Actv_Map[3].contents[1].contents[1]
+#events_maps[4]=Actv_Map[4].contents[1].contents[1]
+#events_maps[5]=Actv_Map[5].contents[1].contents[1]
+#events_maps[6]=Actv_Map[6].contents[1].contents[1]
+#for i in range(len(events_maps)):
+#    events_maps[i] = GetMapsReady(events_maps[i])
+
+Map_1_All_Picks = []
+Map_2_All_Picks = []
+Map_3_All_Picks = []
+Map_4_All_Picks = []
+Map_5_All_Picks = []
+Map_6_All_Picks = []
+Map_7_All_Picks = []
+
+OrderedAgents = list(ItAintPretty())
+
 Actv_Map = soup.find("div", class_="pr-matrix-map").contents[1].contents[1]
 for i in range(len(Actv_Map.contents)):
     if Actv_Map.contents[i] != '\n':
-        MapName_All_Picks.append(Actv_Map.contents[i])
+        Map_1_All_Picks.append(Actv_Map.contents[i])
 
-JustPicks = Split_Teams_From_Map(MapName_All_Picks)
+Teams_s_Matches = Split_Teams_From_Map(Map_1_All_Picks)
+for i in range(len(Teams_s_Matches)):
+    Teams_s_Matches[i].contents = begone_newlineSHITFUCKOFFFFFF(Teams_s_Matches[i].contents)
+Cleaned_Match_Data = Team_Played_MATCH(Teams_s_Matches)
+Oponent_List = Get_Opononent_List(Actv_Map)
+Active_Map = get_map_map_map(Actv_Map)
 
-for i in range(len(JustPicks)):
-    JustPicks[i].contents = begone_newlineSHITFUCKOFFFFFF(JustPicks[i].contents)
+HTML_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
+Teams_Playing = Get_team_list(Actv_Map)
+Team_Overall_Picked = Assemble_Comps(OrderedAgents, HTML_Comps_to_01, Teams_Playing)
 
-#Individual_Comps = []
-#for i in range(12):
-#        Individual_Comps.append(Get_Individual_Comps(list(JustPicks[i])))
+event_TEST = []
+event_TEST.append(Begin_Assemble(Oponent_List, Cleaned_Match_Data, Teams_Playing, Active_Map, Team_Overall_Picked))
 
-Matches_Played = Get_match_list_map(Actv_Map)
+Next_Map = Actv_Map.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+for i in range(len(Next_Map.contents)):
+    if Next_Map.contents[i] != '\n':
+        Map_2_All_Picks.append(Next_Map.contents[i])
 
-Teams_Playing = Get_team_list_map(Actv_Map)
+Teams_s_Matches = Split_Teams_From_Map(Map_2_All_Picks)
+for i in range(len(Teams_s_Matches)):
+    Teams_s_Matches[i].contents = begone_newlineSHITFUCKOFFFFFF(Teams_s_Matches[i].contents)
+Cleaned_Match_Data = Team_Played_MATCH(Teams_s_Matches)
+Oponent_List = Get_Opononent_List(Next_Map)
+Active_Map = get_map_map_map(Next_Map)
 
-#cleans picks
+HTML_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
+Teams_Playing = Get_team_list(Next_Map)
+Team_Overall_Picked = Assemble_Comps(OrderedAgents, HTML_Comps_to_01, Teams_Playing)
 
-#redundant
+event_TEST.append(Begin_Assemble(Oponent_List, Cleaned_Match_Data, Teams_Playing, Active_Map, Team_Overall_Picked))
 
-
-Agents = list(ItAintPretty())
-
-onesandzerospicks = Team_played_OVERALL(JustPicks)
-
-Cleaned_Match_Data = Team_Played_MATCH(JustPicks)
-
-
-Map_In_Funcs = get_map_map_map(Actv_Map)
-
-Team_Overall_Picked = Assemble_Comps(Agents, onesandzerospicks, Teams_Playing)
-#xD
-
-
-print("fuckin breakpoint bitch")
-
-# Wizardry = Assemble_TeamsToPicks(Teams_Playing, JustPicks)
-# def Assemble_TeamsToPicks(Teams_p, PickData):
-#     TheGuy = []
-#     for i in range(12):
-#         TheGuy.append({'Team': Teams_p[i], 'Played Map Count': (len(PickData[i].contents)-19), 'Matches': PickData[i]})
-#     return TheGuy
+print(event_TEST)
