@@ -245,9 +245,9 @@ Cleaned_Match_Data = Team_Played_MATCH(Teams_s_Matches)
 Oponent_List = Get_Opononent_List(Actv_Map)
 Active_Map = get_map_map_map(Actv_Map)
 
-HTML_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
+html_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
 Teams_Playing = Get_team_list(Actv_Map)
-Team_Overall_Picked = Assemble_Comps(OrderedAgents, HTML_Comps_to_01, Teams_Playing)
+Team_Overall_Picked = Assemble_Comps(OrderedAgents, html_Comps_to_01, Teams_Playing)
 
 event_TEST = []
 event_TEST.append(Begin_Assemble(Oponent_List, Cleaned_Match_Data, Teams_Playing, Active_Map, Team_Overall_Picked))
@@ -264,9 +264,9 @@ Cleaned_Match_Data = Team_Played_MATCH(Teams_s_Matches)
 Oponent_List = Get_Opononent_List(Next_Map)
 Active_Map = get_map_map_map(Next_Map)
 
-HTML_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
+html_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
 Teams_Playing = Get_team_list(Next_Map)
-Team_Overall_Picked = Assemble_Comps(OrderedAgents, HTML_Comps_to_01, Teams_Playing)
+Team_Overall_Picked = Assemble_Comps(OrderedAgents, html_Comps_to_01, Teams_Playing)
 
 event_TEST.append(Begin_Assemble(Oponent_List, Cleaned_Match_Data, Teams_Playing, Active_Map, Team_Overall_Picked))
 
