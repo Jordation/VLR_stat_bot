@@ -229,11 +229,11 @@ Map1_comps_01 = Team_played_OVERALL(Map1_matches)
 Map1_Oponent_List = Get_Opononent_List(Map1)
 Map1_Cleaned_Matches = Team_Played_MATCH(Map1_matches)
 Map1_Teams_Playing = Get_team_list(Map1)
-Team_Overall_Picked = Assemble_Comps(OrderedAgents, Map1_comps_01, Map1_Teams_Playing)
+m1Team_Overall_Picked = Assemble_Comps(OrderedAgents, Map1_comps_01, Map1_Teams_Playing)
 Map1_Active_Map = get_map_map_map(Map1)
 
 event_TEST = []
-event_TEST.append(Begin_Assemble(Map1_Oponent_List, Map1_Cleaned_Matches, Map1_Teams_Playing, Map1_Active_Map, Team_Overall_Picked))
+event_TEST.append(Begin_Assemble(Map1_Oponent_List, Map1_Cleaned_Matches, Map1_Teams_Playing, Map1_Active_Map, m1Team_Overall_Picked))
 
 print(event_TEST)
 
@@ -249,3 +249,17 @@ Map6 = Map5.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
 Map6_picks = PrepareMap(Map6.contents)
 Map7 = Map6.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
 Map7_picks = PrepareMap(Map7.contents)
+
+
+
+Map2_matches = Split_Teams_From_Map(Map2_picks)
+for i in range(len(Map2_matches)):
+    Map2_matches[i].contents = PrepareMatchData(Map2_matches[i].contents)
+Map2_comps_01 = Team_played_OVERALL(Map2_matches)
+Map2_Oponent_List = Get_Opononent_List(Map2)
+Map2_Cleaned_Matches = Team_Played_MATCH(Map2_matches)
+Map2_Teams_Playing = Get_team_list(Map2)
+m2Team_Overall_Picked = Assemble_Comps(OrderedAgents, Map2_comps_01, Map2_Teams_Playing)
+Map2_Active_Map = get_map_map_map(Map2)
+
+event_TEST.append(Begin_Assemble(Map2_Oponent_List, Map2_Cleaned_Matches, Map2_Teams_Playing, Map2_Active_Map, m2Team_Overall_Picked))
