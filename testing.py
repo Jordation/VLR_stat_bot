@@ -1,5 +1,6 @@
 from glob import glob
 from hashlib import new
+from multiprocessing.spawn import prepare
 from operator import index
 from reprlib import recursive_repr
 from this import d
@@ -68,10 +69,7 @@ def begone_newlineSHITFUCKOFFFFFF(yeppackitupcunt):
     for i in range(len(yeppackitupcunt)):
         if yeppackitupcunt[i] != '\n':
             HoldOnMate.append(yeppackitupcunt[i])
-    negativeindex = (23-len(HoldOnMate)-1)
-    for i in range(2):
-        HoldOnMate.pop(negativeindex)
-        HoldOnMate.pop(0)
+
     return HoldOnMate
 
 def Team_played_OVERALL(RawPicks):
@@ -210,64 +208,44 @@ def GetMapsReady(wftable):
             retlist.append(wftable.contents[i])
     return retlist
 
-
-#events_maps = [0,0,0,0,0,0,0]
-#Actv_Map = soup.find_all("div", class_="pr-matrix-map")
-#events_maps[0]=Actv_Map[0].contents[1].contents[1]
-#events_maps[1]=Actv_Map[1].contents[1].contents[1]
-#events_maps[2]=Actv_Map[2].contents[1].contents[1]
-#events_maps[3]=Actv_Map[3].contents[1].contents[1]
-#events_maps[4]=Actv_Map[4].contents[1].contents[1]
-#events_maps[5]=Actv_Map[5].contents[1].contents[1]
-#events_maps[6]=Actv_Map[6].contents[1].contents[1]
-#for i in range(len(events_maps)):
-#    events_maps[i] = GetMapsReady(events_maps[i])
-
-Map_1_All_Picks = []
-Map_2_All_Picks = []
-Map_3_All_Picks = []
-Map_4_All_Picks = []
-Map_5_All_Picks = []
-Map_6_All_Picks = []
-Map_7_All_Picks = []
+def PrepareMap(Map):
+    newlist = [x for x in Map if x != '\n']
+    return newlist
+def PrepareMatchData(Map):
+    newlist = [x for x in Map if x != '\n']
+    negativeindex = (23-len(newlist)-1)
+    for i in range(2):
+        newlist.pop(negativeindex)
+        newlist.pop(0)
+    return newlist
 
 OrderedAgents = list(ItAintPretty())
-
-Actv_Map = soup.find("div", class_="pr-matrix-map").contents[1].contents[1]
-for i in range(len(Actv_Map.contents)):
-    if Actv_Map.contents[i] != '\n':
-        Map_1_All_Picks.append(Actv_Map.contents[i])
-
-Teams_s_Matches = Split_Teams_From_Map(Map_1_All_Picks)
-for i in range(len(Teams_s_Matches)):
-    Teams_s_Matches[i].contents = begone_newlineSHITFUCKOFFFFFF(Teams_s_Matches[i].contents)
-Cleaned_Match_Data = Team_Played_MATCH(Teams_s_Matches)
-Oponent_List = Get_Opononent_List(Actv_Map)
-Active_Map = get_map_map_map(Actv_Map)
-
-html_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
-Teams_Playing = Get_team_list(Actv_Map)
-Team_Overall_Picked = Assemble_Comps(OrderedAgents, html_Comps_to_01, Teams_Playing)
+Map1 = soup.find("div", class_="pr-matrix-map").contents[1].contents[1]
+Map1_picks = PrepareMap(Map1.contents)
+Map1_matches = Split_Teams_From_Map(Map1_picks)
+for i in range(len(Map1_matches)):
+    Map1_matches[i].contents = PrepareMatchData(Map1_matches[i].contents)
+Map1_comps_01 = Team_played_OVERALL(Map1_matches)
+Map1_Oponent_List = Get_Opononent_List(Map1)
+Map1_Cleaned_Matches = Team_Played_MATCH(Map1_matches)
+Map1_Teams_Playing = Get_team_list(Map1)
+Team_Overall_Picked = Assemble_Comps(OrderedAgents, Map1_comps_01, Map1_Teams_Playing)
+Map1_Active_Map = get_map_map_map(Map1)
 
 event_TEST = []
-event_TEST.append(Begin_Assemble(Oponent_List, Cleaned_Match_Data, Teams_Playing, Active_Map, Team_Overall_Picked))
-
-Next_Map = Actv_Map.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
-for i in range(len(Next_Map.contents)):
-    if Next_Map.contents[i] != '\n':
-        Map_2_All_Picks.append(Next_Map.contents[i])
-
-Teams_s_Matches = Split_Teams_From_Map(Map_2_All_Picks)
-for i in range(len(Teams_s_Matches)):
-    Teams_s_Matches[i].contents = begone_newlineSHITFUCKOFFFFFF(Teams_s_Matches[i].contents)
-Cleaned_Match_Data = Team_Played_MATCH(Teams_s_Matches)
-Oponent_List = Get_Opononent_List(Next_Map)
-Active_Map = get_map_map_map(Next_Map)
-
-html_Comps_to_01 = Team_played_OVERALL(Teams_s_Matches)
-Teams_Playing = Get_team_list(Next_Map)
-Team_Overall_Picked = Assemble_Comps(OrderedAgents, html_Comps_to_01, Teams_Playing)
-
-event_TEST.append(Begin_Assemble(Oponent_List, Cleaned_Match_Data, Teams_Playing, Active_Map, Team_Overall_Picked))
+event_TEST.append(Begin_Assemble(Map1_Oponent_List, Map1_Cleaned_Matches, Map1_Teams_Playing, Map1_Active_Map, Team_Overall_Picked))
 
 print(event_TEST)
+
+Map2 = Map1.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+Map2_picks = PrepareMap(Map2.contents)
+Map3 = Map2.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+Map3_picks = PrepareMap(Map3.contents)
+Map4 = Map3.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+Map4_picks = PrepareMap(Map4.contents)
+Map5 = Map4.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+Map5_picks = PrepareMap(Map5.contents)
+Map6 = Map5.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+Map6_picks = PrepareMap(Map6.contents)
+Map7 = Map6.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+Map7_picks = PrepareMap(Map7.contents)
