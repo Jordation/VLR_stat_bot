@@ -63,7 +63,6 @@ def Get_team_list(Active_map_Object):
             TeamsPlaying.append(string)
     return TeamsPlaying
 
-    
 def begone_newlineSHITFUCKOFFFFFF(yeppackitupcunt):
     HoldOnMate = []
     for i in range(len(yeppackitupcunt)):
