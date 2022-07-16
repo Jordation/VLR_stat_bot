@@ -1,9 +1,0 @@
-teams [12]
-matches p [29]
-Cleaned_Match_Data[12][n]
-
-len(cmd[i])
-	team:
-match counter 
-for i in range 12
-	{team: teams[i] e: matches p[match counter] comp
