@@ -11,7 +11,7 @@ from bs4.diagnose import diagnose
 import re
 import asyncio
 
-with open("newtest.html") as testpage:
+with open("NA_TEST.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
   
 
@@ -69,7 +69,6 @@ def begone_newlineSHITFUCKOFFFFFF(yeppackitupcunt):
     for i in range(len(yeppackitupcunt)):
         if yeppackitupcunt[i] != '\n':
             HoldOnMate.append(yeppackitupcunt[i])
-
     return HoldOnMate
 
 def Team_played_OVERALL(RawPicks):
@@ -179,6 +178,7 @@ def CleanMatchList(MatchList):
     return MatchList
 
 def Begin_Assemble(OpponentList, GroupedMatches, TeamsList, damap, TeamDicts):
+    
     def Make_match_dicts(Match, Team, Opponent):
         matchDict = {}
         matchDict["Team"]=str(Team)
@@ -191,7 +191,6 @@ def Begin_Assemble(OpponentList, GroupedMatches, TeamsList, damap, TeamDicts):
     Matches_Counter = 0
     ThisMap={'Map': damap, 'Teams': LTeams}
     OpponentList = CleanMatchList(OpponentList)
-    
     for i in range(len(LTeams)):
         aha = []
         aha.clear()
@@ -199,6 +198,7 @@ def Begin_Assemble(OpponentList, GroupedMatches, TeamsList, damap, TeamDicts):
             aha.append(Make_match_dicts(GroupedMatches[i][y], TeamsList[i], OpponentList[Matches_Counter]))
             Matches_Counter += 1
             ThisMap['Teams'][i]['Matches'] = aha
+            
     return ThisMap
 
 def GetMapsReady(wftable):
@@ -235,19 +235,23 @@ Map1_Active_Map = get_map_map_map(Map1)
 event_TEST = []
 event_TEST.append(Begin_Assemble(Map1_Oponent_List, Map1_Cleaned_Matches, Map1_Teams_Playing, Map1_Active_Map, m1Team_Overall_Picked))
 
+def Find_Matchups():
+    pass
+
+
 print(event_TEST)
 
 Map2 = Map1.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
-Map2_picks = PrepareMap(Map2.contents)
 Map3 = Map2.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
-Map3_picks = PrepareMap(Map3.contents)
 Map4 = Map3.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
-Map4_picks = PrepareMap(Map4.contents)
 Map5 = Map4.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
-Map5_picks = PrepareMap(Map5.contents)
 Map6 = Map5.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
-Map6_picks = PrepareMap(Map6.contents)
 Map7 = Map6.find_next("div", class_="pr-matrix-map").contents[1].contents[1]
+Map2_picks = PrepareMap(Map2.contents)
+Map3_picks = PrepareMap(Map3.contents)
+Map4_picks = PrepareMap(Map4.contents)
+Map5_picks = PrepareMap(Map5.contents)
+Map6_picks = PrepareMap(Map6.contents)
 Map7_picks = PrepareMap(Map7.contents)
 
 
