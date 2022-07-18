@@ -83,18 +83,18 @@ def get_comps(get_comps_OBJ):
 def split_teams_matches(tempList):
     tempList.pop(0)
     sorted_list = []
-    counter = -1
+    cntr = 0
     for i in range(len(tempList)):#why break
         if len(tempList[i].attrs['class']) == 1: 
             sorted_list.append(nlk(tempList[i].contents))
-            sorted_list[counter+1].pop(0)
-            sorted_list[counter+1].pop(0)
-            sorted_list[counter+1].pop(-1)
-            sorted_list[counter+1].pop(-1)
-            sorted_list[counter+1].append(re.split("([A-Z]\w+)", tempList[i].text)[1])
-            counter += 1
+            sorted_list[cntr].pop(0)
+            sorted_list[cntr].pop(0)
+            sorted_list[cntr].pop(-1)
+            sorted_list[cntr].pop(-1)
+            sorted_list[cntr].append(re.split("([A-Z]\w+)", tempList[i].text)[1])
+            cntr += 1
         else:
-            sorted_list[counter].append(nlk(tempList[i]))
+            sorted_list[cntr-1].append(nlk(tempList[i]))
     return sorted_list
 def prepare_soup_comps(get_comps_OBJ):
     for i in range(len(get_comps_OBJ)):
