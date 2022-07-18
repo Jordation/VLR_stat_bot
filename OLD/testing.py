@@ -11,7 +11,7 @@ from bs4.diagnose import diagnose
 import re
 import asyncio
 
-with open("NA_TEST.html") as testpage:
+with open("C:\DEV\Stats\VLR_stat_bot\OLD\NA_TEST.html") as testpage:
     soup = BeautifulSoup(testpage, "html.parser")
   
 
