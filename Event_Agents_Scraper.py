@@ -1,3 +1,4 @@
+from ast import Return
 from calendar import c
 from http.client import OK
 from pydoc import getpager
@@ -76,10 +77,17 @@ PickRates = get_pick_rates(get_PR_OBJ)
 print("z")
 get_comps_OBJ = theSOUP.find_all("div", class_="pr-matrix-map")
 def get_comps(get_comps_OBJ):
+    bigboy = []
     get_comps_OBJ = prepare_soup_comps(get_comps_OBJ)
     for i in range(len(get_comps_OBJ)):
-        find_teams_picks_overall(get_comps_OBJ[i])
-    pass
+        bigboy.append(find_teams_picks_overall(get_comps_OBJ[i]))
+    return bigboy
+
+def prepare_soup_comps(get_comps_OBJ):
+    for i in range(len(get_comps_OBJ)):
+        get_comps_OBJ[i] = nlk(get_comps_OBJ[i].contents[1].contents[1].contents)
+        get_comps_OBJ[i] = split_teams_matches(get_comps_OBJ[i])
+    return get_comps_OBJ
 def split_teams_matches(tempList):
     tempList.pop(0)
     sorted_list = []
@@ -96,18 +104,48 @@ def split_teams_matches(tempList):
         else:
             sorted_list[cntr-1].append(nlk(tempList[i]))
     return sorted_list
-def prepare_soup_comps(get_comps_OBJ):
-    for i in range(len(get_comps_OBJ)):
-        get_comps_OBJ[i] = nlk(get_comps_OBJ[i].contents[1].contents[1].contents)
-        get_comps_OBJ[i] = split_teams_matches(get_comps_OBJ[i])
-    return get_comps_OBJ
+
 def find_teams_picks_overall(comps_obj):
-    pass
-def find_oponent_WL_compPlayed():
-    #td class_="mod-loss"
-    #tr class_="pr-matrix-row mod-dropdown"
-    #td class_="mod-picked-lite"
-    pass
+    picks_overall_list = []
+    op_WL_compPlayed_list = []
+    for i in range(len(comps_obj)):
+        picks_overall_list.append(split_overall_from_matches(comps_obj[i]))
+    for i in range(len(picks_overall_list)):
+        op_WL_compPlayed_list.append(find_oponent_WL_compPlayed(picks_overall_list[i][1]))
+        picks_overall_list[i] = picks_overall_list[i][0]
+    return picks_overall_list, op_WL_compPlayed_list
+def split_overall_from_matches(comps_obj):
+    global Agents_ORDER
+    for i in range(len(Agents_ORDER)):
+        if len(comps_obj[i].attrs['class'])>0:
+            comps_obj[i] = Agents_ORDER[i]
+    newlist = [x for x in comps_obj if type(x) == str]
+    newlist2 = [y for y in comps_obj[len(Agents_ORDER):] if type(y) != str]
+    return newlist, newlist2
+
+    
+def find_oponent_WL_compPlayed(matches_list):
+    def deal_with_result_op(modresult):
+        vspattern = re.compile("vs. \w+")
+        newlist = []
+        if str(modresult) == '[<td class="mod-win"':
+            newlist.append('W')
+        else:
+            newlist.append('L')
+        newlist.append(re.search(vspattern, modresult.text).group())
+        return newlist
+    def deal_with_comp(compdata):
+        global Agents_ORDER
+        for i in range(len(compdata)):
+            if len(compdata[i].attrs['class'])>0:
+                compdata[i] = Agents_ORDER[i]
+        newlist = [x for x in compdata if type(x) == str]
+        return newlist
+    newlist = []
+    for i in range(len(matches_list)):
+        newlist.append(deal_with_result_op(matches_list[i][0]))
+        newlist[i].append(deal_with_comp(matches_list[i][2:]))
+    return newlist
 
 AgentsSelected = get_comps(get_comps_OBJ)
 
