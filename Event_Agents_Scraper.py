@@ -151,9 +151,9 @@ AgentsSelected = get_comps(get_comps_OBJ)
 Pickrates_byEvent = []
 Pickrates_byMap = []
 
-def organise(Comp_Data, PR_Data):
+def organise_for_PANDAS(Comp_Data, PR_Data):
     
     pass
-organise(AgentsSelected, PickRates)
+organise_for_PANDAS(AgentsSelected, PickRates)
 print("Dese")
     
