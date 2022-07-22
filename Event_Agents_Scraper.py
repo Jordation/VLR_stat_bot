@@ -4,12 +4,7 @@ import re
 import requests
 
 
-url = "https://www.vlr.gg/event/agents/1014/valorant-champions-tour-stage-2-masters-copenhagen"
-def Get_Page(url):
-    ActivePage = requests.get(url)
-    return ActivePage.text
-active_Page = Get_Page(url)
-theSOUP = BeautifulSoup(active_Page, "html.parser")
+
 Agents_ORDER = []
 teams_ORDER = []
 maps_ORDER = []
@@ -31,7 +26,8 @@ def nlk(x):
     newlist = [y for y in x if y != '\n']
     return newlist
 
-get_PR_OBJ = theSOUP.find("table", class_="wf-table mod-pr-global")
+
+
 def get_pick_rates(get_PR_OBJ):
     #table class_="wf-table mod-pr-global"
     get_PR_OBJ.contents = nlk(get_PR_OBJ.contents)
@@ -65,9 +61,8 @@ def find_map_pickrates(overall_PR_OBJ):
     for i in range(len(map_data)):
         map_data[i] = split_and_clean(map_data[i].contents)
     return map_data
-PickRates = get_pick_rates(get_PR_OBJ)
 
-get_comps_OBJ = theSOUP.find_all("div", class_="pr-matrix-map")
+
 def get_comps(get_comps_OBJ):
     def assemblequick(nlst):
         global teams_ORDER
@@ -147,13 +142,22 @@ def find_oponent_WL_compPlayed(matches_list):
         newlist[i].append(deal_with_comp(matches_list[i][2:]))#
     return newlist
 
-AgentsSelected = get_comps(get_comps_OBJ)
-Pickrates_byEvent = []
-Pickrates_byMap = []
+url = "https://www.vlr.gg/event/agents/1014/valorant-champions-tour-stage-2-masters-copenhagen"
+def Get_Page(url):
+    ActivePage = requests.get(url)
+    return ActivePage.text
+
+
+def call_all(url):
+    active_Page = Get_Page(url)
+    theSOUP = BeautifulSoup(active_Page, "html.parser")
+    get_comps_OBJ = theSOUP.find_all("div", class_="pr-matrix-map")
+    get_PR_OBJ = theSOUP.find("table", class_="wf-table mod-pr-global")
+    PickRates = get_pick_rates(get_PR_OBJ)
+    AgentsSelected = get_comps(get_comps_OBJ)
+    return PickRates,AgentsSelected
 
 def organise_for_PANDAS(Comp_Data, PR_Data):
-    
     pass
-organise_for_PANDAS(AgentsSelected, PickRates)
 print("Dese")
     
