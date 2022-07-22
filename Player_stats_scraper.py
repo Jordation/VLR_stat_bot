@@ -16,11 +16,21 @@ def get_stat_categories(stats_in):
         newstr=str(re.findall('title=".+"', stats_in[i]))
         newlist.append(newstr[9:-3])
     return newlist
+def agents_played_finder(player_in):
+    player_in = player_in[:3]
+    for i in range(len(player_in)):
+        player_in[i] = player_in[i].attrs['src'].split('.')[0].split('/')[-1]
+    return player_in
 def split_players_picks_rnds(player_in, filterlist, filterlistnum):
     returnlist=[]
-    returnlist.extend((player_in[0].text[4:-3]).splitlines())
-    returnlist.append(str(filterlist[filterlistnum]))
-    returnlist.append(player_in[2].text)
+    if filterlist == 0:
+        returnlist.extend((player_in[0].text[4:-3]).splitlines())
+        returnlist.append(agents_played_finder(nlk(player_in[1].contents[1])))
+        returnlist.append(player_in[2].text)
+    else:
+        returnlist.extend((player_in[0].text[4:-3]).splitlines())
+        returnlist.append(str(filterlist[filterlistnum]))
+        returnlist.append(player_in[2].text)
     return returnlist
 def split_stats(stats_in):
     statlist=[]
@@ -36,6 +46,8 @@ def get_stats(stats_in, filterlist, filterlistnum):
     return stats
 def player_dict(categories, stats):
     d={}
+    if len(categories) != len(stats):
+        return d
     for x in range(len(categories)):
         d[categories[x]] = stats[x]
     return d
@@ -50,6 +62,22 @@ def new_url(url, filterlist, flistnum):
     ActivePage = requests.get(newurl)
     return ActivePage.text
 
+def call_all_for_overall(url_unfiltered, filterlist, filterlistnum):
+    stat_dicts=[]
+    active_Page = requests.get(url_unfiltered).text
+    theSOUP = BeautifulSoup(active_Page, "html.parser")
+    stat_categories_OBJ = theSOUP.findAll("thead")
+    stats_thestats_OBJ = theSOUP.findAll("tbody")
+    
+    cleaned_stat_categories = nlk(stat_categories_OBJ[0].contents[1].contents)
+    stat_categories=get_stat_categories(cleaned_stat_categories)
+    
+    cleaned_stats = nlk(stats_thestats_OBJ[0].contents)
+    stats = get_stats(cleaned_stats, filterlist, filterlistnum)
+    
+    stat_dicts.extend(make_export_dict(stat_categories, stats))
+    return stat_dicts
+
 def call_all(url_filtered, filterlist, filterlistnum):
     stat_dicts=[]
     active_Page = new_url(url_filtered, filterlist, filterlistnum)
@@ -63,9 +91,10 @@ def call_all(url_filtered, filterlist, filterlistnum):
     cleaned_stats = nlk(stats_thestats_OBJ[0].contents)
     stats = get_stats(cleaned_stats, filterlist, filterlistnum)
     
-    stat_dicts.append(make_export_dict(stat_categories, stats))
+    stat_dicts.extend(make_export_dict(stat_categories, stats))
     if len(stat_dicts) == 0:
         stat_dicts=("No pick data for " + filterlist[filterlistnum])
     return stat_dicts
-
+shiturl ="https://www.vlr.gg/stats/?event_group_id=all&event_id=1113&series_id=all&region=all&country=all&min_rounds=1&min_rating=50&agent=all&map_id=all&timespan=60d"
+bigasspage=call_all_for_overall(shiturl, 0, 0)
 print("howareya")
