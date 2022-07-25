@@ -4,8 +4,6 @@ from bs4 import BeautifulSoup
 from bs4.diagnose import diagnose
 import re
 import requests
-filterlist=['astra', 'breach', 'brimstone', 'chamber', 'cypher', 'fade', 'jett', 'kayo', 'killjoy', 'neon', 'omen', 'phoenix', 'raze', 'reyna', 'sage', 'skye', 'sova', 'viper', 'yoru']
-url_filtered = "https://www.vlr.gg/event/stats/1014/valorant-champions-tour-stage-2-masters-copenhagen?exclude=&min_rounds={}&agent={}"
 def nlk(x):
     newlist = [y for y in x if y != '\n']
     return newlist
@@ -92,8 +90,8 @@ def call_all(url_filtered, filterlist, filterlistnum):
     stats = get_stats(cleaned_stats, filterlist, filterlistnum)
     
     stat_dicts.extend(make_export_dict(stat_categories, stats))
-    if len(stat_dicts) == 0:
-        stat_dicts=("No pick data for " + filterlist[filterlistnum])
+    #if len(stat_dicts) == 0:
+    #    stat_dicts=("No pick data for " + filterlist[filterlistnum])
     return stat_dicts
 shiturl ="https://www.vlr.gg/stats/?event_group_id=all&event_id=1113&series_id=all&region=all&country=all&min_rounds=1&min_rating=50&agent=all&map_id=all&timespan=60d"
 bigasspage=call_all_for_overall(shiturl, 0, 0)
