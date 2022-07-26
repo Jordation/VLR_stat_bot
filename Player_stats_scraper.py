@@ -93,6 +93,18 @@ def call_all(url_filtered, filterlist, filterlistnum):
     #if len(stat_dicts) == 0:
     #    stat_dicts=("No pick data for " + filterlist[filterlistnum])
     return stat_dicts
+
+
+# area for testing
+
+# filterlist=['astra','brimstone','omen','viper','jett','raze','reyna','neon','phoenix','yoru','breach','fade','kayo','skye','sova','chamber','cypher','killjoy','sage']
+# url_filtered = "https://www.vlr.gg/event/stats/1014/valorant-champions-tour-stage-2-masters-copenhagen?exclude=&min_rounds={}&agent={}"
+# Stats_List = []
+# for i in range(len(filterlist)):
+#     Stats_List.extend(call_all(url_filtered, filterlist, i))
+
+
+
 shiturl ="https://www.vlr.gg/stats/?event_group_id=all&event_id=1113&series_id=all&region=all&country=all&min_rounds=1&min_rating=50&agent=all&map_id=all&timespan=60d"
 bigasspage=call_all_for_overall(shiturl, 0, 0)
-print("howareya")
+print("player stats")
