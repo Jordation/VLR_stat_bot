@@ -107,4 +107,4 @@ def call_all(url_filtered, filterlist, filterlistnum):
 
 shiturl ="https://www.vlr.gg/stats/?event_group_id=all&event_id=1113&series_id=all&region=all&country=all&min_rounds=1&min_rating=50&agent=all&map_id=all&timespan=60d"
 bigasspage=call_all_for_overall(shiturl, 0, 0)
-print("player stats")
+#print("player stats")
